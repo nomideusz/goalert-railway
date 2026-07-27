@@ -1,0 +1,93 @@
+# yaml-language-server: $schema=https://schema.zeabur.app/template.json
+apiVersion: zeabur.com/v1
+kind: Template
+metadata:
+    name: GoAlert
+spec:
+    description: On-call scheduling and escalations — self-hosted PagerDuty alternative.
+    icon: https://raw.githubusercontent.com/target/goalert/master/web/src/app/public/icons/favicon-192.png
+    tags:
+        - On-Call
+        - Alerting
+        - Monitoring
+        - DevOps
+        - Open Source
+    readme: |-
+        # GoAlert
+
+        [GoAlert](https://goalert.me/) is open-source on-call scheduling, automated escalations, and notifications, built by Target — a self-hosted alternative to PagerDuty and Opsgenie with no per-user pricing.
+
+        ## After deployment
+
+        1. Open the service domain and sign in with the admin credentials from your variables.
+        2. Connect notification channels in Admin → Config: Twilio for SMS/voice, Slack via the generated app manifest, SMTP for email.
+        3. Point your monitoring (Alertmanager, Grafana, …) at GoAlert integration keys.
+
+        Template source: [nomideusz/goalert-railway](https://github.com/nomideusz/goalert-railway)
+    variables:
+        - key: PUBLIC_DOMAIN
+          type: DOMAIN
+          name: Public Domain
+          description: The domain of your GoAlert instance
+    services:
+        - name: postgresql
+          icon: https://raw.githubusercontent.com/zeabur/service-icons/main/marketplace/postgresql.svg
+          template: PREBUILT
+          spec:
+            source:
+                image: postgres:17-alpine
+            ports:
+                - id: database
+                  port: 5432
+                  type: TCP
+            volumes:
+                - id: data
+                  dir: /var/lib/postgresql/data
+            env:
+                POSTGRES_DB:
+                    default: goalert
+                    expose: true
+                POSTGRES_USER:
+                    default: goalert
+                    expose: true
+                POSTGRES_PASSWORD:
+                    default: ${PASSWORD}
+                    expose: true
+                POSTGRES_HOST:
+                    default: ${CONTAINER_HOSTNAME}
+                    expose: true
+        - name: goalert
+          icon: https://raw.githubusercontent.com/target/goalert/master/web/src/app/public/icons/favicon-192.png
+          template: PREBUILT
+          domainKey: PUBLIC_DOMAIN
+          dependencies:
+            - postgresql
+          spec:
+            source:
+                image: ghcr.io/nomideusz/goalert-railway:latest
+            ports:
+                - id: web
+                  port: 8081
+                  type: HTTP
+            env:
+                PORT:
+                    default: "8081"
+                    expose: false
+                DATABASE_URL:
+                    default: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432/${POSTGRES_DB}?sslmode=disable
+                    expose: false
+                GOALERT_PUBLIC_URL:
+                    default: https://${ZEABUR_WEB_DOMAIN}
+                    expose: false
+                GOALERT_DATA_ENCRYPTION_KEY:
+                    default: ${PASSWORD}
+                    expose: false
+                ADMIN_USERNAME:
+                    default: admin
+                    expose: false
+                ADMIN_PASSWORD:
+                    default: ${PASSWORD}
+                    expose: false
+            instructions:
+                - title: Sign in with your admin credentials
+                  content: https://${ZEABUR_WEB_DOMAIN}
