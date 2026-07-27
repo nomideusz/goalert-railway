@@ -1,0 +1,104 @@
+{
+  "buckets": {},
+  "services": {
+    "a1b2c3d4-0001-4000-8000-000000000001": {
+      "icon": "https://raw.githubusercontent.com/target/goalert/master/web/src/app/public/icons/favicon-192.png",
+      "name": "goalert",
+      "build": {
+        "dockerfilePath": "Dockerfile"
+      },
+      "deploy": {
+        "startCommand": null,
+        "healthcheckPath": null,
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 10
+      },
+      "source": {
+        "repo": "https://github.com/nomideusz/goalert-railway",
+        "rootDirectory": "/"
+      },
+      "variables": {
+        "DATABASE_URL": {
+          "defaultValue": "postgres://${{postgres.POSTGRES_USER}}:${{postgres.POSTGRES_PASSWORD}}@${{postgres.RAILWAY_PRIVATE_DOMAIN}}:5432/${{postgres.POSTGRES_DB}}?sslmode=disable",
+          "description": "Postgres connection - wired to the bundled database, leave as is",
+          "isOptional": false
+        },
+        "GOALERT_DATA_ENCRYPTION_KEY": {
+          "defaultValue": "${{secret(32)}}",
+          "description": "Auto-generated - encrypts alert data and API keys at rest",
+          "isOptional": false
+        },
+        "ADMIN_USERNAME": {
+          "defaultValue": "admin",
+          "description": "First admin account username, created on first boot",
+          "isOptional": false
+        },
+        "ADMIN_PASSWORD": {
+          "defaultValue": "${{secret(16)}}",
+          "description": "Auto-generated - first admin account password",
+          "isOptional": false
+        },
+        "ADMIN_EMAIL": {
+          "defaultValue": "",
+          "description": "Email for the first admin account (optional)",
+          "isOptional": true
+        },
+        "GOALERT_PUBLIC_URL": {
+          "defaultValue": "",
+          "description": "Leave empty - derived from your Railway domain automatically",
+          "isOptional": true
+        }
+      },
+      "networking": {
+        "serviceDomains": {
+          "<hasDomain>": {}
+        }
+      },
+      "volumeMounts": {}
+    },
+    "a1b2c3d4-0002-4000-8000-000000000002": {
+      "icon": "https://raw.githubusercontent.com/zeabur/service-icons/main/marketplace/postgresql.svg",
+      "name": "postgres",
+      "build": {},
+      "deploy": {
+        "startCommand": null,
+        "healthcheckPath": null,
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 10
+      },
+      "source": {
+        "image": "ghcr.io/railwayapp-templates/postgres-ssl:17"
+      },
+      "variables": {
+        "POSTGRES_DB": {
+          "defaultValue": "goalert",
+          "description": "Database name",
+          "isOptional": false
+        },
+        "POSTGRES_USER": {
+          "defaultValue": "postgres",
+          "description": "Database superuser (GoAlert enables pgcrypto itself)",
+          "isOptional": false
+        },
+        "POSTGRES_PASSWORD": {
+          "defaultValue": "${{secret(32)}}",
+          "description": "Auto-generated database password",
+          "isOptional": false
+        },
+        "PGDATA": {
+          "defaultValue": "/var/lib/postgresql/data/pgdata",
+          "description": "Data subdirectory - keeps Postgres happy on Railway volumes",
+          "isOptional": false
+        }
+      },
+      "networking": {
+        "serviceDomains": {}
+      },
+      "volumeMounts": {
+        "a1b2c3d4-0002-4000-8000-000000000002": {
+          "mountPath": "/var/lib/postgresql/data"
+        }
+      }
+    }
+  }
+}
