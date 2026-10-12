@@ -1,6 +1,6 @@
 # Deploy and Host GoAlert on Railway
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/goalert?utm_medium=integration&utm_source=button&utm_campaign=goalert)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/goalert?referralCode=sLjDXb&utm_medium=integration&utm_source=button&utm_campaign=goalert)
 
 [GoAlert](https://goalert.me/) is open-source on-call scheduling, automated escalations, and notifications — built and battle-tested by Target. Rotations, escalation policies, and alerts that reach the right person by SMS, voice call, Slack, email, or web push, so you never miss a critical page. A self-hosted alternative to PagerDuty and the sunsetting Opsgenie, with no per-user pricing.
 
