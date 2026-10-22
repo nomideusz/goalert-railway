@@ -14,7 +14,7 @@
         "restartPolicyMaxRetries": 10
       },
       "source": {
-        "repo": "https://github.com/nomideusz/goalert-railway",
+        "repo": "https://github.com/two-workspaces/goalert",
         "rootDirectory": "/"
       },
       "variables": {

@@ -1,0 +1,8 @@
+{
+  "id": "170e1966-7702-4d38-9e94-58fb8e55050b",
+  "name": "GoAlert",
+  "description": "On-call scheduling and escalations \u2014 self-hosted PagerDuty alternative",
+  "category": "Observability",
+  "image": "https://raw.githubusercontent.com/target/goalert/master/web/src/app/public/icons/favicon-192.png",
+  "published": true
+}

@@ -21,7 +21,7 @@ This template runs GoAlert as a single service next to a Postgres database — t
 ### Deployment Dependencies
 
 - [GoAlert documentation](https://goalert.me/docs/)
-- [Template source on GitHub](https://github.com/nomideusz/goalert-railway)
+- [Template source on GitHub](https://github.com/two-workspaces/goalert)
 
 ### Implementation Details
 
